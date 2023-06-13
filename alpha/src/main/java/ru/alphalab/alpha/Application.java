@@ -90,11 +90,11 @@ public class Application implements ApplicationRunner {
         final String resultFileName = "Result.txt";
         final String tread1FileName = "Thread1.txt";
         final String tread2FileName = "Thread2.txt";
-        final int busyWaitingTime = 100;
+        final int busyWaitingTime = 250000;
 
         MultithreadingWriter writer = new MultithreadingWriter();
         AtomicInteger count = new AtomicInteger(0);
-        int maxCount = 100;
+        int maxCount = 1000000;
         var resultFile = clearFile(resultFileName);
         AtomicLong resultTime = new AtomicLong();
 
@@ -115,9 +115,12 @@ public class Application implements ApplicationRunner {
             throw new RuntimeException(e);
         }
 
+        System.out.println("Данные из итогового файла:");
         readFile(resultFileName);
+        System.out.println("Данные записанные первым потоком в итоговый файл и собственный файл:");
         readFile(tread1FileName);
         if (isTwoTread) {
+            System.out.println("Данные записанные вторым потоком в итоговый файл и собственный файл:");
             readFile(tread2FileName);
         }
 
