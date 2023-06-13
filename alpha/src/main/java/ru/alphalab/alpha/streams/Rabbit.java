@@ -1,4 +1,4 @@
-package streams;
+package ru.alphalab.alpha.streams;
 
 public class Rabbit implements NamedObject {
 

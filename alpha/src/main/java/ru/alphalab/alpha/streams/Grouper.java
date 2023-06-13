@@ -1,4 +1,4 @@
-package streams;
+package ru.alphalab.alpha.streams;
 
 import java.util.List;
 import java.util.Map;

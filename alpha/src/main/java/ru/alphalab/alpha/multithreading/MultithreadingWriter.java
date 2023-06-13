@@ -1,4 +1,4 @@
-package multithreading;
+package ru.alphalab.alpha.multithreading;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

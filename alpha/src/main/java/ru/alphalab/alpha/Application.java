@@ -1,8 +1,17 @@
-import multithreading.MultithreadingWriter;
-import streams.Dog;
-import streams.Grouper;
-import streams.NamedObject;
-import streams.Rabbit;
+package ru.alphalab.alpha;
+
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import ru.alphalab.alpha.dto.DocumentDto;
+import ru.alphalab.alpha.dto.HumanDto;
+import ru.alphalab.alpha.multithreading.MultithreadingWriter;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import ru.alphalab.alpha.service.HumanService;
+import ru.alphalab.alpha.streams.Dog;
+import ru.alphalab.alpha.streams.Grouper;
+import ru.alphalab.alpha.streams.NamedObject;
+import ru.alphalab.alpha.streams.Rabbit;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -14,14 +23,47 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class Application {
+@SpringBootApplication
+public class Application implements ApplicationRunner {
+
+    private final HumanService humanService;
+
+    public Application(HumanService humanService) {
+        this.humanService = humanService;
+    }
 
     public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+
+    @Override
+    public void run(ApplicationArguments args) {
+        db(humanService);
         streams();
         multithreading();
     }
 
+    public static void db(HumanService humanService) {
+        System.out.println();
+        System.out.println("Start db search");
+
+        //Напишите программу, которая находит и печатает в консоли данные (ФИО гражданина,
+        //тип документа и номер документа) всех граждан и их документов, у которых в номере
+        //документа есть «777». Должна выводиться информация только по активным документам.
+
+        var resultList = humanService.getHumansByDocumentNumberContains("777");
+        for (HumanDto human : resultList) {
+            System.out.println(human.getFio());
+            for (DocumentDto document : human.getDocuments()) {
+                if (document.getStatusActive()) {
+                    System.out.println(document.getDocumentType() + " " + document.getDocumentNumber());
+                }
+            }
+        }
+    }
+
     public static void streams() {
+        System.out.println();
         System.out.println("Start streams");
         List<NamedObject> namedObjects = new ArrayList<>();
         namedObjects.add(new Dog());
