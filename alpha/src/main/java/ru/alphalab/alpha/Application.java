@@ -90,11 +90,11 @@ public class Application implements ApplicationRunner {
         final String resultFileName = "Result.txt";
         final String tread1FileName = "Thread1.txt";
         final String tread2FileName = "Thread2.txt";
-        final int busyWaitingTime = 250000;
+        final int busyWaitingTime = 25000;
 
         MultithreadingWriter writer = new MultithreadingWriter();
         AtomicInteger count = new AtomicInteger(0);
-        int maxCount = 1000000;
+        int maxCount = 100000;
         var resultFile = clearFile(resultFileName);
         AtomicLong resultTime = new AtomicLong();
 
@@ -141,11 +141,24 @@ public class Application implements ApplicationRunner {
 
     private static void readFile(String fileName) {
         Path path = Paths.get(fileName);
+        boolean failInFile = false;
+        List<Integer> failArray = new ArrayList<>();
+        int before = 0;
         try(BufferedReader bufferedReader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             String resultString;
             while((resultString = bufferedReader.readLine()) != null) {
                 System.out.println(resultString);
+                var resultChar = resultString.split(" ");
+                for (String c : resultChar) {
+                    int cInt = Integer.parseInt(c);
+                    if (before > cInt) {
+                        failInFile = true;
+                        failArray.add(cInt);
+                    }
+                    before = cInt;
+                }
             }
+            System.out.println("Наличие ошибки в алгоритме: " + failInFile + ", числа не на своем месте: " + failArray);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

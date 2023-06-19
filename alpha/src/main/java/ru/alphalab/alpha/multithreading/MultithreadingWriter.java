@@ -45,12 +45,14 @@ public class MultithreadingWriter {
     }
 
     private void write(File file, int count) {
-        try(BufferedWriter bufferedWriter = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(file, true), StandardCharsets.UTF_8))) {
-            bufferedWriter.append(String.valueOf(count));
-            bufferedWriter.append(" ");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        synchronized (file) {
+            try(BufferedWriter bufferedWriter = new BufferedWriter(
+                    new OutputStreamWriter(new FileOutputStream(file, true), StandardCharsets.UTF_8))) {
+                bufferedWriter.append(String.valueOf(count));
+                bufferedWriter.append(" ");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
